@@ -8,7 +8,14 @@ const Footer = () => {
             <div className='max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10 '>
                 {/* Logo and Socials Section */}
                 <div className='flex flex-col items-center md:items-start md:border-r md:border-r-gray-700 md:pr-10'>
-                    <Image src="/logo-white.png" alt="Logo" width={150} height={150} className="mb-4" />
+                <Image
+                    src="https://res.cloudinary.com/drqabv2wq/image/upload/v1763268627/Trustconsult-logo-new-2_kja9lt.png"
+                    alt="Logo"
+                    width={160}
+                    height={40}
+                    priority
+                    style={{ height: "auto", width: "auto" }}
+                />
                     <div className='flex space-x-6'>
                         <a href="#" aria-label="Facebook" className='hover:text-white transition-colors duration-300'>
                             <FaFacebook size={24} />
