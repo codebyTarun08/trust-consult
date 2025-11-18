@@ -93,6 +93,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Footer from '@/components/common/Footer';
+import Image from 'next/image';
 const page = () => {
   return (
     <>
@@ -206,11 +207,20 @@ const page = () => {
               transition={{ duration: 0.5, delay: 0.1 * index }}
               className="bg-gray-800 p-6 rounded-xl border border-gray-850 hover:scale-95 transition-all duration-700 shadow-lg text-center flex flex-col items-center"
             >
-              <img
+              {/* <img
                 src={`https://placehold.co/100x100/374151/9CA3AF?text=${member.name.split(' ').map(n => n[0]).join('')}`}
                 alt={member.name}
                 className="w-24 h-24 rounded-full mb-4 object-cover border-4 border-gray-800 hover:border-purple-400 transition"
+              /> */}
+              <Image
+                unoptimized
+                src={`https://placehold.co/100x100/374151/9CA3AF?text=${member.name.split(' ').map(n => n[0]).join('')}`}
+                width={100}
+                height={100}
+                alt={member.name}
+                className="w-24 h-24 rounded-full mb-4 object-cover border-4 border-gray-800 hover:border-purple-400 transition"
               />
+
               <h3 className="text-xl font-semibold text-white">{member.name}</h3>
               <p className="text-sm text-purple-400 mt-1">{member.title}</p>
             </motion.div>

@@ -1,5 +1,6 @@
 "use client";
 import { getAllUsers } from "@/services/adminService";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 const Page = () => {
@@ -94,7 +95,10 @@ const Page = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm font-medium flex items-center gap-4">
-                          <img
+                          <Image
+                            unoptimized
+                            width={100}
+                            height={100}
                             className="w-12 h-12 object-cover rounded-full object-center"
                             src={u?.image}
                             alt={`${u?.firstName || "User"} avatar`}
@@ -126,7 +130,10 @@ const Page = () => {
                   className="bg-black/20 rounded-lg p-3 flex items-center gap-4"
                 >
                   <div className="flex-shrink-0">
-                    <img
+                    <Image
+                      unoptimized
+                      width={100}
+                      height={100}
                       className="w-12 h-12 object-cover rounded-full"
                       src={u?.image}
                       alt={`${u?.firstName || "User"} avatar`}

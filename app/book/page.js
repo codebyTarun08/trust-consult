@@ -13,8 +13,7 @@ import Link from 'next/link';
 import Footer from '@/components/common/Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-
-
+import Image from 'next/image';
 
 
 const Page = () => { 
@@ -119,7 +118,10 @@ const Page = () => {
                   className="bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-700 flex flex-col transform hover:-translate-y-1"
                 >
                   <div className="flex items-center mb-3 md:mb-4">
-                    <img
+                    <Image
+                      unoptimized
+                      width={100}
+                      height={100}
                       src={consultant?.consultantId?.image || `https://api.dicebear.com/7.x/initials/svg?seed=${consultant.firstName} ${consultant.lastName}`}
                       alt={`${consultant.firstName} Profile`}
                       className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover mr-3 md:mr-4 border-2 border-indigo-500"

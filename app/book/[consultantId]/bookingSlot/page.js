@@ -472,7 +472,7 @@ const Page = () => {
                         
                         {/* Review Text */}
                         <p className="text-sm italic text-neutral-400 line-clamp-3">
-                          "{booking.review.review}"
+                          &quot;{booking.review.review}&quot;
                         </p>
                       </>
                     ) : (

@@ -7,6 +7,7 @@ import { getBookings } from "@/services/clientService";
 import { FaVideo, FaPhoneSlash, FaImage } from "react-icons/fa";
 import Rating from "react-rating"
 import { FaStar } from "react-icons/fa"
+import Image from "next/image";
 export default function ChatPage({ params }) {
   const { roomId } = params || {};
   const searchParams = useSearchParams();
@@ -1051,7 +1052,10 @@ useEffect(() => {
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3 bg-richblack-800 shadow-lg sticky top-0 z-10">
         <div className="flex items-center gap-4">
-            <img
+            <Image
+              unoptimized
+              width={100}
+              height={100}
               src={receiverAvatar}
               alt="avatar"
               className={`rounded-full object-cover border w-12 h-12 shadow-sm`}
@@ -1073,7 +1077,7 @@ useEffect(() => {
       <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-2 bg-richblack-900">
         {messages.map((msg, i) => (
           <div key={i} className={`flex flex-col max-w-xs rounded-xl p-2 ${String(msg.senderId) === String(localUser.id) ? "self-end bg-blue-600" : "self-start bg-richblack-700"}`}>
-            {msg.imageUrl && <img src={msg.imageUrl} alt="sent" className="rounded mb-2 max-h-40 object-contain" />}
+            {msg.imageUrl && <Image width={100} height={100} unoptimized src={msg.imageUrl} alt="sent" className="rounded mb-2 max-h-40 object-contain" />}
             <span>{msg.text}</span>
             <span className="text-[10px] text-gray-300 text-right">{msg?.sender}</span>
           </div>
@@ -1137,7 +1141,7 @@ useEffect(() => {
         <input id="img-upload" type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
         {uploadImage?.preview && (
           <div className="relative inline-block">
-            <img src={uploadImage.preview} alt="preview" className="w-10 h-10 rounded object-cover border mx-2" />
+            <Image unoptimized width={100} height={100} src={uploadImage.preview} alt="preview" className="w-10 h-10 rounded object-cover border mx-2" />
             <button
               onClick={() => setUploadImage(null)}
               className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-700"

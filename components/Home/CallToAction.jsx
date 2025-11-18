@@ -71,6 +71,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 // Data object for the call-to-action content.
 const ctaData = {
@@ -201,7 +202,10 @@ const CallToAction = () => {
                         className='w-full lg:w-1/2 flex justify-center'
                         variants={imageVariants}
                     >
-                        <img
+                        <Image
+                            unoptimized
+                            width={100}
+                            height={100}
                             src={"/HomeImages/explaining-data-whiteboard.jpg"||"https://placehold.co/600x400/374151/9CA3AF?text=Consultant+Team"}
                             alt="Consultant Team"
                             className='rounded-3xl shadow-2xl w-full h-auto'

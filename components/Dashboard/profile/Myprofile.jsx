@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
-
+import Image from 'next/image';
 const Myprofile = () => {
   const { user } = useSelector((state) => state.profile);
 
@@ -22,7 +22,10 @@ const Myprofile = () => {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12">
         {/* Profile Image */}
         <div className="flex-shrink-0">
-          <img
+          <Image 
+            unoptimized
+            width={100}
+            height={100}
             className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-full border-4 border-blue-200/60  shadow-lg"
             src={user?.image || 'https://placehold.co/160x160/F3F4F6/9CA3AF?text=User'}
             alt={`${user?.firstName}'s profile picture`}

@@ -95,7 +95,10 @@ const Navbar = () => {
                     onClick={() => setShow((s) => !s)}
                     className="rounded-full overflow-hidden w-10 h-10 border-4 border-green-100/20 shadow-lg"
                   >
-                    <img
+                    <Image
+                      //unoptimized
+                      width={100}
+                      height={100}
                       src={user?.image}
                       alt="User Avatar"
                       className="w-full h-full object-cover"
@@ -176,7 +179,7 @@ const Navbar = () => {
                     </Link>
                   )}
                   <div className="flex items-center gap-3 mt-1">
-                    <img src={user?.image} alt="User Avatar" className="w-10 h-10 object-cover rounded-full" />
+                    <Image width={100} height={100} src={user?.image} alt="User Avatar" className="w-10 h-10 object-cover rounded-full" />
                     <div>
                       <div className="text-white font-medium">{user?.firstName + " " + user?.lastName || "User"}</div>
                       <button
