@@ -52,7 +52,6 @@ const DropDownMenu = ({ setShow }) => {
     >
       <div className='flex flex-col items-center justify-center p-2 mb-4'>
         <Image
-          unoptimized
           width={100}
           height={100}
           className='w-24 h-24 object-cover rounded-full border-4 border-purple-500/50 shadow-lg object-center transform transition-transform duration-300 hover:scale-105'

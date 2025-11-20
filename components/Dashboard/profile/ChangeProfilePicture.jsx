@@ -47,11 +47,10 @@ const ChangeProfilePicture = () => {
       <div className="flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-3xl rounded-md p-4 sm:p-6 flex flex-col lg:flex-row items-center gap-6">
           <Image
-            unoptimized
             width={100}
             height={100}
             className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-full border-4 border-blue-200/60 shadow-lg"
-            src={previewSource || user?.image}
+            src={previewSource || user?.image || 'https://placehold.co/160x160/F3F4F6/9CA3AF?text=User'}
             alt={user?.firstName || "Profile"}
           />
 

@@ -209,11 +209,11 @@ const page = () => {
             >
               {/* <img
                 src={`https://placehold.co/100x100/374151/9CA3AF?text=${member.name.split(' ').map(n => n[0]).join('')}`}
-                alt={member.name}
+                alt={member.name}   
                 className="w-24 h-24 rounded-full mb-4 object-cover border-4 border-gray-800 hover:border-purple-400 transition"
               /> */}
               <Image
-                unoptimized
+              priority
                 src={`https://placehold.co/100x100/374151/9CA3AF?text=${member.name.split(' ').map(n => n[0]).join('')}`}
                 width={100}
                 height={100}

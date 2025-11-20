@@ -31,7 +31,8 @@ export default async function handler(req, res) {
 import { NextResponse } from "next/server";
 import databaseConnection from "@/lib/dbConfig";
 import Message from "@/models/messageModel";
-
+import Booking from "@/models/bookingModel"
+import User from "@/models/userModel"
 export async function GET(req) {
   databaseConnection();
   try {
@@ -50,11 +51,12 @@ export async function GET(req) {
     if(messages.length === 0 ){
       return NextResponse.json(
         {
-        message:"No messages found for this room"
+        message:"No messages found for this room",
+        messages
         }
         ,
-        {status:403}
-    )
+        {status:200}
+     )
     }
     return NextResponse.json(messages, { status: 200 });
   } catch (err) {

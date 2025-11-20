@@ -81,7 +81,7 @@ const Page = () => {
                   id="category-filter"
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="flex-grow max-w-xs p-2 md:p-3 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 text-white cursor-pointer"
+                  className="grow max-w-xs p-2 md:p-3 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 text-white cursor-pointer"
                 >
                   <option value="all">All Categories</option>
                   {activeCategory.map((cat) => (
@@ -119,7 +119,6 @@ const Page = () => {
                 >
                   <div className="flex items-center mb-3 md:mb-4">
                     <Image
-                      unoptimized
                       width={100}
                       height={100}
                       src={consultant?.consultantId?.image || `https://api.dicebear.com/7.x/initials/svg?seed=${consultant.firstName} ${consultant.lastName}`}
@@ -136,7 +135,7 @@ const Page = () => {
                     </div>
                   </div>
 
-                  <p className="text-xs md:text-sm text-gray-400 mb-3 md:mb-4 flex-grow line-clamp-3">
+                  <p className="text-xs md:text-sm text-gray-400 mb-3 md:mb-4 grow line-clamp-3">
                       A seasoned professional with expertise in {consultant.categories[0].name} and {consultant.expertise?.[0] || 'Leadership'}. Ready to help you achieve your goals.
                   </p>
 

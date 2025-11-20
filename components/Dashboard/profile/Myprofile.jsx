@@ -23,7 +23,6 @@ const Myprofile = () => {
         {/* Profile Image */}
         <div className="flex-shrink-0">
           <Image 
-            unoptimized
             width={100}
             height={100}
             className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-full border-4 border-blue-200/60  shadow-lg"

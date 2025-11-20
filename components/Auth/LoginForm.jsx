@@ -45,7 +45,7 @@ return (
                             name='email'
                             value={formData.email}
                             placeholder='Enter Email Address'
-                            className='py-2 bg-richblack-800 text-cyan-600 w-full sm:w-4/5 px-5 rounded-md border-b-[1px] border-b-slate-500'
+                            className='py-2 bg-richblack-800 text-cyan-600 w-full sm:w-4/5 px-5 rounded-md border-b border-b-slate-500'
                             onChange={changeHandler}
                             />
                     </label>
@@ -57,9 +57,9 @@ return (
                             name='password'
                             value={formData.password}
                             placeholder='Enter Password Here'
-                             className='py-2 bg-richblack-800 text-cyan-600 w-full sm:w-4/5 px-5 rounded-md border-b-[1px] border-b-slate-500'
+                             className='py-2 bg-richblack-800 text-cyan-600 w-full sm:w-4/5 px-5 rounded-md border-b border-b-slate-500'
                             onChange={changeHandler}/>
-                            <Link href='reset-password'><p className='text-sm mt-2 text-cyan-600 italic font-cursive'>Forgot Password?</p></Link>
+                            <p className='text-sm mt-2 text-cyan-600 italic font-cursive'>Forgot Password?</p>
                             <span
                              className='absolute top-[35px] right-5 sm:right-28 text-cyan-600 cursor-pointer z-10'
                              onClick={()=>{setShowPassword(!showPassword)}}

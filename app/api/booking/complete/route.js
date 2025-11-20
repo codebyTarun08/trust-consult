@@ -3,7 +3,7 @@ import databaseConnection from "@/lib/dbConfig";
 import Booking from "@/models/bookingModel";
 import User from "@/models/userModel";
 import { bookingCompletedTemplate } from "@/mail/bookingCompletedTemplate";
-
+import { mailSender } from "@/utils/mailSender";
 const sendBookingCompletedEmail = async (email,clientName, consultantName)=>{
   try {
     const emailBody = bookingCompletedTemplate(clientName, consultantName);

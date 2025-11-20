@@ -95,8 +95,7 @@ const Page = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm font-medium flex items-center gap-4">
-                          <Image
-                            unoptimized
+                          <Image           
                             width={100}
                             height={100}
                             className="w-12 h-12 object-cover rounded-full object-center"
@@ -129,9 +128,9 @@ const Page = () => {
                   key={u._id}
                   className="bg-black/20 rounded-lg p-3 flex items-center gap-4"
                 >
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <Image
-                      unoptimized
+                     
                       width={100}
                       height={100}
                       className="w-12 h-12 object-cover rounded-full"

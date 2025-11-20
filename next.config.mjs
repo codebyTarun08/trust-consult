@@ -10,7 +10,16 @@ const nextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "placehold.co"
+      },   
+      {
+        protocol: "https",
+        hostname: "avatar.iran.liara.run"
+      }
     ],
+    dangerouslyAllowSVG: true,
   },
   reactStrictMode:false
 };

@@ -56,7 +56,7 @@ const Page = () => {
 
                         <button
                         type='submit'
-                        className='mt-6 transition-all duration-200 hover:scale-95 w-full rounded-[8px] bg-amber-300 py-[12px] px-[12px] font-medium text-richblack-900 cursor-pointer'>
+                        className='mt-6 transition-all duration-200 hover:scale-95 w-full rounded-xl bg-amber-300 py3 px-3 font-medium text-richblack-900 cursor-pointer'>
                             Verify Email
                         </button>
                     </form>
