@@ -29,7 +29,7 @@ import {
   listenForCallRequest,
 } from "@/lib/firebaseCall"; // listenForCallRequest not implemented here but flow uses call doc
 import { setUserOnline, setUserOffline, listenToPresence } from "@/lib/presense";
-import { db } from "@/lib/firebaseconfig";
+import { db } from "@/lib/firebaseConfig";
 import { doc, onSnapshot,updateDoc } from "firebase/firestore";
 
 export default function ChatPage() {
