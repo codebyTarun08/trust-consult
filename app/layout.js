@@ -6,9 +6,18 @@ import Providers from "./redux/Providers";
 
 
 export const metadata = {
-  title: "Trust Consult",
-  description: "Get expert advice from trusted consultants",
+  title: "Trust Consult – Expert Consultancy Platform",
+  description: "Book online video consultations with trusted experts. Chat, video call and get personalized guidance instantly.",
+  keywords: [
+    "consultant",
+    "online consultation",
+    "expert advice",
+    "video consultation",
+    "professional consultant",
+  ],
+  authors: [{ name: "Trust Consult" }],
 };
+
 
 export default function RootLayout({ children }) {
   return (
