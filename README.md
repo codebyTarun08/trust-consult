@@ -31,7 +31,7 @@
 ## 📌 Technology Used
 <a name="tech-stack"></a>
 
-###🎨Frontend
+### Frontend
 <a F="frontend"></a>
 <p align="left"> <img src="https://img.icons8.com/color/70/000000/html-5--v1.png" width="55" title="HTML5"/> <img src="https://img.icons8.com/color/70/000000/css3.png" width="55" title="CSS3"/> <img src="https://img.icons8.com/color/70/000000/javascript--v1.png" width="55" title="JavaScript"/> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png" width="55" title="React.js"/> <img src="https://seeklogo.com/images/N/next-js-logo-8FCFF51DD2-seeklogo.com.png" width="55" title="Next.js"/> <img src="https://img.icons8.com/color/70/tailwindcss.png" width="55" title="Tailwind CSS"/> </p>
 
@@ -45,14 +45,14 @@
 
 -**Next.js (App Router) →** Server-side rendering (SSR), routing, metadata SEO
 
-###⚙️ Backend / Server
+### Backend / Server
 <a i="back-end"></a>
 <p align="left"> <img src="https://img.icons8.com/color/70/000000/nodejs.png" width="55" title="Node.js"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original.svg" width="55" title="Express.js"/> </p>
 
 -**Node.js →** Backend runtime for scalable application logic
 -**Firebase →** Used for realtime chat and video call.
 
-###🔥 Real-time & Database
+### Real-time & Database
 <p align="left"> <img src="https://www.gstatic.com/devrel-devsite/prod/v68cf724cbbbdca8fd7acd977f2dbdf52f4854d38183aa68b51d492e5871cf053/firebase/images/touchicon-180.png" width="55" title="Firebase"/> </p>
 
 -**Firebase Firestore →** Stores messages and call documents
@@ -61,19 +61,19 @@
 
 -**Cloudinary →** Image upload for chat messages
 
-###🎥 Communication Layer
+### Communication Layer
 <p align="left"> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/WebRTC_Logo.svg/2560px-WebRTC_Logo.svg.png" width="55" title="WebRTC"/> </p>
 
 -**WebRTC →** Peer-to-peer video/audio streaming
 
 -**TURN/STUN servers →** NAT traversal for reliable calling
 
-###💳 Payment Integration
+### Payment Integration
 <p align="left"> <img src="https://seeklogo.com/images/S/stripe-logo-066F8E0F8B-seeklogo.com.png" width="55" title="Stripe"/> </p>
 
 -**Stripe Checkout →** Secure payment, subscription/session verification
 
-###☁️ Deployment
+### Deployment
 <p align="left"> <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" width="55" title="Vercel"/> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Render.com_logo.svg/2560px-Render.com_logo.svg.png" width="55" title="Render"/> </p>
 
 -**Vercel →** Frontend hosting with serverless functions
