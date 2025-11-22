@@ -53,7 +53,7 @@
 -**Firebase →** Used for realtime chat and video call.
 
 ### Real-time & Database
-<p align="left"> <img src="https://www.gstatic.com/devrel-devsite/prod/v68cf724cbbbdca8fd7acd977f2dbdf52f4854d38183aa68b51d492e5871cf053/firebase/images/touchicon-180.png" width="55" title="Firebase"/> </p>
+<p align="left"> <img src="https://firebase.google.com/brand-guidelines" width="55" title="Firebase"/> </p>
 
 -**Firebase Firestore →** Stores messages and call documents
 
@@ -62,19 +62,19 @@
 -**Cloudinary →** Image upload for chat messages
 
 ### Communication Layer
-<p align="left"> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/WebRTC_Logo.svg/2560px-WebRTC_Logo.svg.png" width="55" title="WebRTC"/> </p>
+<p align="left"> <img src="https://webrtc.github.io/webrtc-org/assets/images/webrtc-logo-vert-retro-255x305.png" width="55" title="WebRTC"/> </p>
 
 -**WebRTC →** Peer-to-peer video/audio streaming
 
 -**TURN/STUN servers →** NAT traversal for reliable calling
 
 ### Payment Integration
-<p align="left"> <img src="https://seeklogo.com/images/S/stripe-logo-066F8E0F8B-seeklogo.com.png" width="55" title="Stripe"/> </p>
+<p align="left"> <img src="https://iconscout.com/free-icon/free-stripe-logo-icon_2945188" width="55" title="Stripe"/> </p>
 
 -**Stripe Checkout →** Secure payment, subscription/session verification
 
 ### Deployment
-<p align="left"> <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" width="55" title="Vercel"/> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Render.com_logo.svg/2560px-Render.com_logo.svg.png" width="55" title="Render"/> </p>
+<p align="left"> <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" width="55" title="Vercel"/></p>
 
 -**Vercel →** Frontend hosting with serverless functions
 
@@ -91,7 +91,7 @@ details for each instructor.
 and rating.
 
 
-![Database Schema](images/schema.png)
+![Database Schema](public/schema.png)
 
 <hr>
 <p align="right">(<a href="#top">back to top</a>)</p>
