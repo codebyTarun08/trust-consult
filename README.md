@@ -53,7 +53,7 @@
 -**Firebase →** Used for realtime chat and video call.
 
 ### Real-time & Database
-<p align="left"> <img src="https://firebase.google.com/brand-guidelines" width="55" title="Firebase"/> </p>
+<p align="left"> <img src="https://1000logos.net/wp-content/uploads/2024/05/Firebase-Logo.png" width="55" title="Firebase"/> </p>
 
 -**Firebase Firestore →** Stores messages and call documents
 
@@ -69,7 +69,7 @@
 -**TURN/STUN servers →** NAT traversal for reliable calling
 
 ### Payment Integration
-<p align="left"> <img src="https://iconscout.com/free-icon/free-stripe-logo-icon_2945188" width="55" title="Stripe"/> </p>
+<p align="left"> <img src="https://banner2.cleanpng.com/20180409/gqw/kisspng-stripe-payment-gateway-e-commerce-payment-system-b-strips-5acb36b2dd9799.8990945715232672509077.jpg" width="55" title="Stripe"/> </p>
 
 -**Stripe Checkout →** Secure payment, subscription/session verification
 
