@@ -574,12 +574,12 @@ export default function ChatPage() {
       {videoCallActive && (
         <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20">
           <div className="w-full max-w-4xl px-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="w-full md:w-1/2 relative">
+            <div className="md:flex md:flex-row gap-4">
+              <div className="w-30 h-40 md:w-1/2 relative">
                 <video ref={localVideoRef} autoPlay muted playsInline className="w-full rounded-lg bg-black border border-richblack-700 aspect-video object-cover" />
                 <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs">You</div>
               </div>
-              <div className="w-full md:w-1/2 relative">
+              <div className="w-full h-[90%] md:w-1/2 relative">
                 <video ref={remoteVideoRef} autoPlay playsInline className="w-full rounded-lg bg-black border border-richblack-700 aspect-video object-cover" />
                 <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs">{receiverName}</div>
                 {remoteVideoRef.current && !remoteVideoRef.current.srcObject && (

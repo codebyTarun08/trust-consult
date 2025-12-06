@@ -21,6 +21,7 @@ export async function POST(request) {
 
     // Generate numeric-only OTP
         let otp = otpGenerator.generate(6, { alphabets:false, upperCase: false, specialChars: false})
+        console.log(otp);
 
     // Ensure uniqueness in DB (optional but safer)
     let existingOtp = await Otp.findOne({ otp });
