@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div id="top"></div>
+<div align="center">
+  <h1>TrustConsult</h1>
+  <h2> A Full Stack Online Consulting Platform </h2>
+  <h3> Check out at https://trust-consult.vercel.app</h3>
+  <p>A full-stack consultancy platform enabling clients to connect with trusted experts via real-time chat, video calling, and secure online payments.</p>
+</div>
 
-## Getting Started
+<br>
 
-First, run the development server:
+<hr>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<h2>Table of Contents</h2>
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- [Project Description](#project-description)
+- [Technology Used](#tech-stack)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+- [Data Models and Database Schema](#data-models-and-database-schema)
+- [API Design](#api-design)
+## Project Description
+<a name="project-description"></a>
+*TrustConsult is a scalable real-time consulting platform designed to help clients connect with trusted domain experts through chat and live video sessions. The application is built using the Next.js App Router and follows a modular architectural pattern, optimizing both performance and maintainability. Authentication is implemented with JWT and bcrypt to ensure secure onboarding, access control, and private communication.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+*To enable real-time communication, the system uses Firebase Firestore for message storage and Firebase Realtime Database for user presence awareness. Live video consultations are powered by WebRTC, enabling peer-to-peer streaming with TURN/STUN fallback support for complex network environments. Stripe Checkout is integrated to support secure, smooth payment processing for consultation sessions.
 
-## Learn More
+*The platform features a responsive and modern user interface built with Tailwind CSS, offering a clean and intuitive experience across devices. Deployment is managed through Vercel for frontend edge delivery and Render for required backend operations, ensuring a globally performant and highly available system.
+<hr>
 
-To learn more about Next.js, take a look at the following resources:
+## 📌 Technology Used
+<a name="tech-stack"></a>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Frontend
+<a F="frontend"></a>
+<p align="left"> <img src="https://img.icons8.com/color/70/000000/html-5--v1.png" width="55" title="HTML5"/> <img src="https://img.icons8.com/color/70/000000/css3.png" width="55" title="CSS3"/> <img src="https://img.icons8.com/color/70/000000/javascript--v1.png" width="55" title="JavaScript"/> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png" width="55" title="React.js"/> <img src="https://seeklogo.com/images/N/next-js-logo-8FCFF51DD2-seeklogo.com.png" width="55" title="Next.js"/> <img src="https://img.icons8.com/color/70/tailwindcss.png" width="55" title="Tailwind CSS"/> </p>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+-**HTML5 →** Base structure and semantic markup for accessibility
 
-## Deploy on Vercel
+-**CSS3 / Tailwind CSS →** Responsive, utility-first design system
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-**JavaScript (ES6+) →** Interactive frontend logic
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+-**React.js →** Component-based UI architecture
+
+-**Next.js (App Router) →** Server-side rendering (SSR), routing, metadata SEO
+
+### Backend / Server
+<a i="back-end"></a>
+<p align="left"> <img src="https://img.icons8.com/color/70/000000/nodejs.png" width="55" title="Node.js"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original.svg" width="55" title="Express.js"/> </p>
+
+-**Node.js →** Backend runtime for scalable application logic
+-**Firebase →** Used for realtime chat and video call.
+
+### Real-time & Database
+<p align="left"> <img src="https://1000logos.net/wp-content/uploads/2024/05/Firebase-Logo.png" width="55" title="Firebase"/> </p>
+
+-**Firebase Firestore →** Stores messages and call documents
+
+-**Firebase Realtime Database →** Live presence system (online/offline tracking)
+
+-**Cloudinary →** Image upload for chat messages
+
+### Communication Layer
+<p align="left"> <img src="https://webrtc.github.io/webrtc-org/assets/images/webrtc-logo-vert-retro-255x305.png" width="55" title="WebRTC"/> </p>
+
+-**WebRTC →** Peer-to-peer video/audio streaming
+
+-**TURN/STUN servers →** NAT traversal for reliable calling
+
+### Payment Integration
+<p align="left"> <img src="https://banner2.cleanpng.com/20180409/gqw/kisspng-stripe-payment-gateway-e-commerce-payment-system-b-strips-5acb36b2dd9799.8990945715232672509077.jpg" width="55" title="Stripe"/> </p>
+
+-**Stripe Checkout →** Secure payment, subscription/session verification
+
+### Deployment
+<p align="left"> <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" width="55" title="Vercel"/></p>
+
+-**Vercel →** Frontend hosting with serverless functions
+
+
+
+### Data Models and Database Schema:
+<a k="data-models-and-database-schema"></a>
+The back end of TrustConsult uses a range of data models and database schemas to
+manage data, including:
+1. Client schema: Includes fields such as name, email, password
+2. Instructor schema: Includes fields such as name, email, password, and course
+details for each instructor.
+3. Booking schema: Includes fields such as client Id, consultant Id , description, slot details,
+and rating.
+
+
+![Database Schema](public/schema.png)
+
+<hr>
+<p align="right">(<a href="#top">back to top</a>)</p>
