@@ -11,7 +11,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Rating from "react-rating";
-import { FaVideo, FaPhoneSlash, FaImage, FaStar } from "react-icons/fa";
+import { FaVideo, FaPhoneSlash, FaImage, FaStar, FaSyncAlt } from "react-icons/fa";
 import { useParams, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { getBookings } from "@/services/clientService";
@@ -53,14 +53,29 @@ export default function ChatPage() {
   const [endCallModal, setEndCallModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
+  const [videoFocus, setVideoFocus] = useState("remote"); // remote, local
 
   // WebRTC refs
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
   const peerConnection = useRef();
   const remoteMediaStream = useRef(null);
+  const localMediaStream = useRef(null);
   const iceCandidateQueue = useRef([]);
   const roleRef = useRef(null); // "caller" or "callee"
+
+  // This effect will run when the video focus changes and re-assign the streams
+  useEffect(() => {
+    if (videoCallActive) {
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = localMediaStream.current;
+      }
+      if (remoteVideoRef.current) {
+        remoteVideoRef.current.srcObject = remoteMediaStream.current;
+      }
+    }
+  }, [videoFocus, videoCallActive]);
+
 
   // --------------- Load user -----------------
   useEffect(() => {
@@ -265,6 +280,7 @@ export default function ChatPage() {
         if (active) return stream;
     }
     const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true });
+    localMediaStream.current = stream;
 
     // DO NOT create peerConnection here — createPeerConnection(role) must be called first outside
     // Add tracks to existing pc (assumes createPeerConnection was already called)
@@ -378,8 +394,8 @@ export default function ChatPage() {
         const data = snap.data();
         if (!data) return;
         // when status === "accepted"
-        if (data.status === "accepted") {
-        try {
+        if (data.status === "accepted" && !data.answer) {
+          try {
             // ensure peerConnection exists first
             if (!peerConnection.current) await createPeerConnection("callee");
 
@@ -393,9 +409,9 @@ export default function ChatPage() {
             await peerConnection.current.setLocalDescription(answer);
 
             await createCallAnswer(roomId, answer, { id: localUser.id, name: localUser.name });
-        } catch (err) {
+          } catch (err) {
             console.error("Error creating answer after accept:", err);
-        }
+          }
         }
       });
 
@@ -572,24 +588,50 @@ export default function ChatPage() {
       </div>
 
       {videoCallActive && (
-        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20">
-          <div className="w-full max-w-4xl px-4">
-            <div className="md:flex md:flex-row gap-4">
-              <div className="w-30 h-40 md:w-1/2 relative">
-                <video ref={localVideoRef} autoPlay muted playsInline className="w-full rounded-lg bg-black border border-richblack-700 aspect-video object-cover" />
-                <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs">You</div>
-              </div>
-              <div className="w-full h-[90%] md:w-1/2 relative">
-                <video ref={remoteVideoRef} autoPlay playsInline className="w-full rounded-lg bg-black border border-richblack-700 aspect-video object-cover" />
-                <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs">{receiverName}</div>
-                {remoteVideoRef.current && !remoteVideoRef.current.srcObject && (
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-400">Waiting for video...</div>
-                )}
+        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-20">
+          {/* Main Video View */}
+          <div className="relative w-full h-full flex items-center justify-center">
+            {videoFocus === 'remote' ? (
+                <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-contain bg-black" />
+            ) : (
+                <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-contain bg-black" />
+            )}
+            <div className="absolute bottom-20 left-4 bg-black/50 px-3 py-1.5 rounded-lg text-sm font-medium">
+              {videoFocus === 'remote' ? receiverName : 'You'}
+            </div>
+
+            {/* Picture-in-Picture Overlay */}
+            <div 
+              className="absolute top-15 right-4 w-1/4 max-w-[250px] aspect-video rounded-lg overflow-hidden shadow-2xl border-2 border-richblack-700 cursor-pointer hover:border-yellow-400 transition-all"
+              onClick={() => setVideoFocus(prev => prev === 'local' ? 'remote' : 'local')}
+            >
+              {videoFocus === 'local' ? (
+                  <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover bg-richblack-800" />
+              ) : (
+                  <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover bg-richblack-800" />
+              )}
+              <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs">
+                {videoFocus === 'local' ? receiverName : 'You'}
               </div>
             </div>
-            <div className="mt-4 flex justify-center">
-              <button onClick={handleEndVideoCall} className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white font-semibold cursor-pointer">End Video Call</button>
-            </div>
+          </div>
+
+          {/* Centered Controls */}
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/60 backdrop-blur-sm p-3 rounded-full">
+            <button 
+              onClick={() => setVideoFocus(prev => prev === 'local' ? 'remote' : 'local')} 
+              className="bg-gray-500/50 hover:bg-gray-600/60 p-3 rounded-full cursor-pointer transition-colors"
+              title="Switch Focus"
+            >
+              <FaSyncAlt size={20} color="white" />
+            </button>
+            <button 
+              onClick={handleEndVideoCall} 
+              className="bg-red-600 hover:bg-red-700 p-4 rounded-full cursor-pointer transition-colors"
+              title="End Call"
+            >
+              <FaPhoneSlash size={24} color="white" />
+            </button>
           </div>
         </div>
       )}
@@ -671,7 +713,7 @@ function ReviewModal({ bookingId, onClose }) {
         </div>
         <div className="mb-6">
           <label className="block text-sm mb-1">Review</label>
-          <textarea value={text} onChange={(e) => setText(e.target.value)} rows={4} className="w-full bg-richblack-700 rounded px-3 py-2 text-white border border-richblack-600 focus:outline-none focus:border-yellow-400" placeholder="Share your experience" />
+          <textarea value={text} onChange={(e) => setText(e.targe.value)} rows={4} className="w-full bg-richblack-700 rounded px-3 py-2 text-white border border-richblack-600 focus:outline-none focus:border-yellow-400" placeholder="Share your experience" />
         </div>
         <div className="flex gap-3 justify-end">
           <button className="cursor-pointer px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-700 disabled:opacity-50 transition-colors" onClick={onClose} disabled={saving}>Cancel</button>

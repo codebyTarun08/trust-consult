@@ -17,6 +17,7 @@ import {
   faComments,
   faHourglass,
   faMoneyCheckAlt,
+  faMagic,
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 
@@ -66,9 +67,6 @@ const getStatusBadge = (status) => {
   //If else ladder for payment status
   if (status === "unpaid") {
     return (
-      // <span className={`${baseClasses} bg-red-600 text-white`}>
-      //   <FontAwesomeIcon icon={faIndianRupeeSign} className="mr-1" /> UNPAID
-      // </span>
     <span
       className={`${baseClasses} flex items-center gap-1 px-2 rounded-full text-red-600 font-semibold backdrop-blur-md bg-red-600/15 border border-red-600/25 shadow-sm shadow-red-600/20`}
     >
@@ -136,6 +134,8 @@ const BookingsPage = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
+  const [chatSummaries, setChatSummaries] = useState({});
+  const [summarizing, setSummarizing] = useState(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -158,13 +158,10 @@ const BookingsPage = () => {
     fetchBookings();
   }, [dispatch]);
 
-  // ---------------------- Filter Bookings ----------------------
   const filteredBookings = useMemo(() => {
     const now = new Date();
-
     return bookings.filter((b) => {
       const bookingDate = new Date(b.slot.date);
-
       switch (activeTab) {
         case "upcoming":
           return b.status === "confirmed" && bookingDate >= now;
@@ -179,8 +176,6 @@ const BookingsPage = () => {
     });
   }, [bookings, activeTab]);
 
-  // ---------------------- Action Handlers ----------------------
-
   const handleChat = (bookingId, slot) => {
     if (!isChatActive(slot)) {
       toast.error("Chat will open only during your scheduled slot time.");
@@ -191,15 +186,39 @@ const BookingsPage = () => {
 
   const handlePay = (bookingId) => {
     toast.success(`Redirecting to payment for Booking ID: ${bookingId}`);
-    // Implement payment modal or redirect logic
   };
 
   const handleReview = (bookingId) => {
     toast.success(`Opening review form for Booking ID: ${bookingId}`);
-    // Implement review modal or separate page
   };
 
-  // ---------------------- Render ----------------------
+  const handleSummarizeChat = async (bookingId) => {
+    setSummarizing(bookingId);
+    try {
+      const response = await fetch("/api/summarize-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookingId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setChatSummaries((prev) => ({ ...prev, [bookingId]: data.summary }));
+        toast.success("Chat summary generated!");
+      } else {
+        toast.error(data.error || "Failed to summarize chat.");
+      }
+    } catch (error) {
+      console.error("Error summarizing chat:", error);
+      toast.error("An error occurred while summarizing the chat.");
+    } finally {
+      setSummarizing(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="bg-gray-900 h-[calc(100vh-4rem)] font-inter text-white p-10 flex justify-center items-center">
@@ -216,7 +235,6 @@ const BookingsPage = () => {
       <div className="max-w-7xl mx-auto">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-8 text-white text-center sm:text-left">🗓️ My Consultation History</h2>
 
-        {/* Tabs */}
         <div className="flex md:flex-wrap space-x-0 sm:space-x-4 mb-6 sm:mb-8 border-b border-gray-700 overflow-x-auto">
           {["all", "upcoming", "payment_pending", "completed"].map((tab) => (
             <button
@@ -228,34 +246,14 @@ const BookingsPage = () => {
                   : "text-gray-400 hover:text-white"
               }`}
             >
-              {tab === "all" && (
-                <>
-                  <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" /> All Bookings
-                </>
-              )}
-              
-              {tab === "upcoming" && (
-                <>
-                  <FontAwesomeIcon icon={faClock} className="mr-2" /> Upcoming Consultations
-                </>
-              )}
-              
-              {tab === "payment_pending" && (
-                <>
-                  <FontAwesomeIcon icon={faMoneyCheckAlt} className="mr-2" /> Payment Pending
-                </>
-              )}
-
-              {tab === "completed" && (
-                <>
-                  <FontAwesomeIcon icon={faCheckCircle} className="mr-2" /> Completed
-                </>
-              )}
+              {tab === "all" && <><FontAwesomeIcon icon={faCalendarAlt} className="mr-2" /> All Bookings</>}
+              {tab === "upcoming" && <><FontAwesomeIcon icon={faClock} className="mr-2" /> Upcoming</>}
+              {tab === "payment_pending" && <><FontAwesomeIcon icon={faMoneyCheckAlt} className="mr-2" /> Payment Pending</>}
+              {tab === "completed" && <><FontAwesomeIcon icon={faCheckCircle} className="mr-2" /> Completed</>}
             </button>
           ))}
         </div>
 
-        {/* Bookings List */}
         {filteredBookings.length === 0 ? (
           <div className="p-6 sm:p-10 bg-gray-800 rounded-lg text-center border-2 border-dashed border-gray-700">
             <p className="text-base sm:text-xl text-gray-400">
@@ -272,7 +270,6 @@ const BookingsPage = () => {
                 key={booking._id}
                 className="bg-gray-800 p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-700 flex flex-col justify-between min-w-0"
               >
-                {/* Header */}
                 <div className="flex flex-wrap justify-between items-start mb-2 sm:mb-4 gap-2">
                   {getStatusBadge(booking.status)}
                   {getStatusBadge(booking.paymentStatus)}
@@ -281,7 +278,6 @@ const BookingsPage = () => {
                   </span>
                 </div>
 
-                {/* Consultant Info */}
                 <div className="mb-2 sm:mb-4">
                   <p className="text-xs sm:text-sm text-gray-400 mb-1 flex items-center">
                     <FontAwesomeIcon icon={faUserTie} className="mr-2 text-blue-400" />
@@ -294,7 +290,6 @@ const BookingsPage = () => {
                   </p>
                 </div>
 
-                {/* Slot Details */}
                 <div className="mb-2 sm:mb-4 space-y-1 sm:space-y-2">
                   <p className="flex items-center text-sm sm:text-md font-medium text-gray-300">
                     <FontAwesomeIcon icon={faCalendarAlt} className="mr-2 text-yellow-400 w-4 h-4" />
@@ -306,7 +301,6 @@ const BookingsPage = () => {
                   </p>
                 </div>
 
-                {/* Description & Amount */}
                 <div className="mb-2 sm:mb-4 border-t border-gray-700 pt-2 sm:pt-3">
                   <p className="text-xs sm:text-sm font-medium text-gray-400 flex items-center mb-1">
                     <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
@@ -322,104 +316,73 @@ const BookingsPage = () => {
                   </p>
                 </div>
 
-                {/* Actions */}
+                {/* Chat Summary */}
+                {chatSummaries[booking._id] && (
+                  <div className="mb-4 p-3 bg-gray-700/50 rounded-lg border border-gray-600">
+                    <h4 className="text-sm font-semibold text-blue-300 mb-2 flex items-center">
+                      <FontAwesomeIcon icon={faMagic} className="mr-2" />
+                      AI Chat Summary
+                    </h4>
+                    <p className="text-xs text-gray-300 italic">{chatSummaries[booking._id]}</p>
+                  </div>
+                )}
+
                 <div className="mt-auto space-y-2">
-                  {/* CHAT Button */}
-                  {
-                    booking.status === "confirmed" ? (
-                      <button
-                        disabled={!isChatActive(booking.slot)}
-                        onClick={() => handleChat(booking._id, booking.slot)}
-                        className={`
-                          text-center font-semibold 
-                          rounded-xl py-2 
-                          backdrop-blur-md 
-                          border
-                          shadow-md  
-                          transition-all duration-300
-                          w-full cursor-pointer ${
-                          !isChatActive(booking.slot)
-                            ? "bg-gray-600/10 cursor-not-allowed border-gray-500/20 shadow-gray-500/20 text-gray-300 hover:bg-gray-500/20 hover:shadow-gray-500/30"
-                            : "bg-green-600/10 border-green-500/20 shadow-green-500/20 hover:bg-green-700/20 text-green-500 hover:shadow-green-500/30"
-                        }`}
-                      >
-                        <FontAwesomeIcon icon={faComments} className="mr-2" />
-                        {!isChatActive(booking.slot) ? "Chat (Locked)" : "Join Chat"}
-                      </button>
-                    ):(
-                      booking.status === "cancelled" ? (
-                        <p 
-                        className="text-center text-red-500 font-semibold 
-                            rounded-xl py-2 
-                            backdrop-blur-md bg-red-500/10 
-                            border border-red-500/40 
-                            shadow-md shadow-red-500/20 
-                            transition-all duration-300
-                            hover:shadow-red-500/30 hover:bg-red-500/20"
-                        >
-                          <FontAwesomeIcon icon={faTimesCircle} className="mr-2"/>
-                          Request Cancelled
-                        </p>
+                  {booking.status === "confirmed" ? (
+                    <button
+                      disabled={!isChatActive(booking.slot)}
+                      onClick={() => handleChat(booking._id, booking.slot)}
+                      className={`text-center font-semibold rounded-xl py-2 backdrop-blur-md border shadow-md transition-all duration-300 w-full cursor-pointer ${
+                        !isChatActive(booking.slot)
+                          ? "bg-gray-600/10 cursor-not-allowed border-gray-500/20 shadow-gray-500/20 text-gray-300 hover:bg-gray-500/20 hover:shadow-gray-500/30"
+                          : "bg-green-600/10 border-green-500/20 shadow-green-500/20 hover:bg-green-700/20 text-green-500 hover:shadow-green-500/30"
+                      }`}
+                    >
+                      <FontAwesomeIcon icon={faComments} className="mr-2" />
+                      {!isChatActive(booking.slot) ? "Chat (Locked)" : "Join Chat"}
+                    </button>
+                  ) : booking.status === "completed" ? (
+                    <p className="text-center text-green-500 font-semibold rounded-xl py-2 backdrop-blur-md bg-green-500/10 border border-green-400/40 shadow-md shadow-green-400/20 transition-all duration-300 hover:shadow-green-500/30 hover:bg-green-500/20">
+                      <FontAwesomeIcon icon={faCheckCircle} className="mr-2"/>
+                      Completed
+                    </p>
+                  ) : (
+                    <p className="text-center text-red-500 font-semibold rounded-xl py-2 backdrop-blur-md bg-red-500/10 border border-red-500/40 shadow-md shadow-red-500/20 transition-all duration-300 hover:shadow-red-500/30 hover:bg-red-500/20">
+                      <FontAwesomeIcon icon={faTimesCircle} className="mr-2"/>
+                      Request Cancelled
+                    </p>
+                  )}
 
-                      ):(
-                        booking.status === "completed" ? (
-                          <p className="text-center text-green-500 font-semibold 
-                            rounded-xl py-2
-                            backdrop-blur-md bg-green-500/10 
-                            border border-green-400/40 
-                            shadow-md shadow-green-400/20
-                            transition-all duration-300
-                            hover:shadow-green-500/30 hover:bg-green-500/20">
-                            <FontAwesomeIcon icon={faCheckCircle} className="mr-2"/>
-                            Completed
-                          </p>
-                        ):(
-                        <p className="text-center text-yellow-500 font-semibold 
-                              rounded-xl py-2
-                              backdrop-blur-md bg-yellow-500/10 
-                              border border-yellow-400/40 
-                              shadow-md shadow-yellow-400/20
-                            transition-all duration-300
-                            hover:shadow-yellow-500/30 hover:bg-yellow-500/20">
-                            <FontAwesomeIcon icon={faHourglass} className="mr-2"/>
-                            Request Not Accepted Yet
-                          </p>
-                        )
-                      )
-                    )
-                  }
-
-                  {/* PAY Button */}
                   {(booking.paymentStatus === "unpaid" && booking.status === "completed") && (
                     <button
                       onClick={() => handlePay(booking._id)}
-                      className="
-                          w-full rounded-lg
-                          text-center text-blue-50 font-semibold 
-                          py-2 
-                          backdrop-blur-md bg-blue-300/40 
-                          border border-blue-200/40 
-                          shadow-md shadow-blue-500/50 
-                          transition-all duration-300
-                          hover:shadow-blue-400/60 hover:bg-blue-500/50"
+                      className="w-full rounded-lg text-center text-blue-50 font-semibold py-2 backdrop-blur-md bg-blue-300/40 border border-blue-200/40 shadow-md shadow-blue-500/50 transition-all duration-300 hover:shadow-blue-400/60 hover:bg-blue-500/50"
                     >
                       <FontAwesomeIcon icon={faIndianRupeeSign} className="mr-2" /> Pay Now
                     </button>
                   )}
+                  
+                  {/* Summarize Chat Button */}
+                  {booking.status === "completed" && (
+                    <button
+                      onClick={() => handleSummarizeChat(booking._id)}
+                      disabled={summarizing === booking._id || chatSummaries[booking._id]}
+                      className="w-full rounded-lg text-center font-semibold py-2 backdrop-blur-md bg-purple-400/40 border border-purple-200/40 shadow-md shadow-purple-500/20 transition-all duration-300 hover:shadow-purple-600/30 hover:bg-purple-500/50 disabled:bg-gray-600/10 disabled:cursor-not-allowed disabled:border-gray-500/20 disabled:shadow-none disabled:text-gray-400"
+                    >
+                      {summarizing === booking._id ? (
+                        <><FontAwesomeIcon icon={faSpinner} spin className="mr-2" />Summarizing...</>
+                      ) : chatSummaries[booking._id] ? (
+                        <><FontAwesomeIcon icon={faMagic} className="mr-2" />Summary Generated</>
+                      ) : (
+                        <><FontAwesomeIcon icon={faMagic} className="mr-2" />Summarize Chat</>
+                      )}
+                    </button>
+                  )}
 
-                  {/* REVIEW Button */}
                   {booking.status === "completed" && !booking.reviewStatus && (
                     <button
                       onClick={() => handleReview(booking._id)}
-                      className="
-                          w-full rounded-lg
-                          text-center text-yellow-100 font-semibold 
-                          py-2 
-                          backdrop-blur-md bg-yellow-400/40 
-                          border border-yellow-200/40 
-                          shadow-md shadow-yellow-500/20 
-                          transition-all duration-300
-                          hover:shadow-yellow-600/30 hover:bg-yellow-500/50"
+                      className="w-full rounded-lg text-center text-yellow-100 font-semibold py-2 backdrop-blur-md bg-yellow-400/40 border border-yellow-200/40 shadow-md shadow-yellow-500/20 transition-all duration-300 hover:shadow-yellow-600/30 hover:bg-yellow-500/50"
                     >
                       <FontAwesomeIcon icon={faStar} className="mr-2" /> Leave a Review
                     </button>
