@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { connect } from '@/lib/dbConfig';
+import  connect  from '@/lib/dbConfig';
 import Booking from '@/models/bookingModel';
 import Review from '@/models/reviewModel';
 
-connect();
+databaseConnection();
 
 export async function POST(request) {
   try {
