@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState, useMemo } from "react";
-import { useDispatch } from "react-redux";
-import { getBookings } from "@/services/clientService";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { getBookings } from '@/services/clientService';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCalendarAlt,
   faClock,
@@ -18,18 +18,18 @@ import {
   faHourglass,
   faMoneyCheckAlt,
   faMagic,
-} from "@fortawesome/free-solid-svg-icons";
-import toast from "react-hot-toast";
+} from '@fortawesome/free-solid-svg-icons';
+import toast from 'react-hot-toast';
 
 const formatHour = (hour) => {
   const h = hour % 12 || 12;
-  const ampm = hour < 12 || hour === 24 ? "AM" : "PM";
+  const ampm = hour < 12 || hour === 24 ? 'AM' : 'PM';
   return `${h}:00 ${ampm}`;
 };
 
 // Display slot as "9:00 AM - 10:00 AM"
 const formatSlotForDisplay = (slotObject) => {
-  if (!slotObject || slotObject.startHour === undefined || slotObject.endHour === undefined) return "N/A";
+  if (!slotObject || slotObject.startHour === undefined || slotObject.endHour === undefined) return 'N/A';
   const start = formatHour(slotObject.startHour);
   const end = formatHour(slotObject.endHour);
   return `${start} - ${end}`;
@@ -40,13 +40,13 @@ const formatDate = (iso) => {
   try {
     const d = new Date(iso);
     return d.toLocaleDateString(undefined, {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   } catch {
-    return "Invalid Date";
+    return 'Invalid Date';
   }
 };
 
@@ -62,10 +62,10 @@ const isChatActive = (slot) => {
 
 // Status badge (booking + payment)
 const getStatusBadge = (status) => {
-  const baseClasses = "text-xs px-2 py-0.5 rounded-full font-bold shadow-sm";
+  const baseClasses = 'text-xs px-2 py-0.5 rounded-full font-bold shadow-sm';
 
   //If else ladder for payment status
-  if (status === "unpaid") {
+  if (status === 'unpaid') {
     return (
     <span
       className={`${baseClasses} flex items-center gap-1 px-2 rounded-full text-red-600 font-semibold backdrop-blur-md bg-red-600/15 border border-red-600/25 shadow-sm shadow-red-600/20`}
@@ -74,7 +74,7 @@ const getStatusBadge = (status) => {
       UNPAID
     </span>
     );
-  }else if (status === "paid") {
+  }else if (status === 'paid') {
     return (
     <span
       className={`${baseClasses} flex items-center gap-0.5 px-2 rounded-full text-green-600 font-semibold backdrop-blur-md bg-green-600/15 border border-green-600/25 shadow-sm shadow-green-600/20`}
@@ -86,7 +86,7 @@ const getStatusBadge = (status) => {
   }
 
   switch (status) {
-    case "completed":
+    case 'completed':
       return (
         <span 
           className={`${baseClasses} flex items-center gap-0.5 px-2 rounded-full text-green-600 font-semibold backdrop-blur-md bg-green-600/15 border border-green-600/25 shadow-sm shadow-green-600/20`}
@@ -94,7 +94,7 @@ const getStatusBadge = (status) => {
           <FontAwesomeIcon icon={faCheckCircle} className="mr-1" /> COMPLETED
         </span>
       );
-    case "cancelled":
+    case 'cancelled':
       return (
         <span 
           className={`${baseClasses} flex items-center gap-0.5 px-2 rounded-full text-gray-400  font-semibold backdrop-blur-md bg-gray-600/40 border border-gray-600 shadow-sm shadow-gray-600/40`}
@@ -102,7 +102,7 @@ const getStatusBadge = (status) => {
           <FontAwesomeIcon icon={faTimesCircle} className="mr-1" /> CANCELLED
         </span>
       );
-    case "pending":
+    case 'pending':
       return (
         <span
           className={`${baseClasses} flex items-center gap-0.5 px-2 rounded-full text-yellow-500 font-semibold backdrop-blur-md bg-yellow-600/25 border border-yellow-600/25 shadow-sm shadow-yellow-600/20`}
@@ -110,7 +110,7 @@ const getStatusBadge = (status) => {
           <FontAwesomeIcon icon={faClock} className="mr-1" /> PENDING
         </span>
       );
-    case "confirmed":
+    case 'confirmed':
       return (
         <span
           className={`${baseClasses} flex justify-center items-center gap-0.5 px-2 rounded-full text-sky-500 font-semibold backdrop-blur-md bg-blue-500/25 border border-blue-500/35 shadow-sm shadow-blue-600/20`}
@@ -133,15 +133,19 @@ const BookingsPage = () => {
   const dispatch = useDispatch();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState('all');
   const [chatSummaries, setChatSummaries] = useState({});
   const [summarizing, setSummarizing] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSummary, setSelectedSummary] = useState('');
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
       setLoading(true);
       try {
-        const user = JSON.parse(localStorage.getItem("user"));
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUserRole(user.role);
         let payload = {
           userId : user._id,
           role: user.role
@@ -149,8 +153,8 @@ const BookingsPage = () => {
         const result = await dispatch(getBookings(payload));
         setBookings(result?.data || result || []);
       } catch (error) {
-        console.error("Error fetching bookings:", error);
-        toast.error("Failed to load your booking history.");
+        console.error('Error fetching bookings:', error);
+        toast.error('Failed to load your booking history.');
       } finally {
         setLoading(false);
       }
@@ -163,13 +167,13 @@ const BookingsPage = () => {
     return bookings.filter((b) => {
       const bookingDate = new Date(b.slot.date);
       switch (activeTab) {
-        case "upcoming":
-          return b.status === "confirmed" && bookingDate >= now;
-        case "payment_pending":
-          return b.paymentStatus === "unpaid";
-        case "completed":
-          return b.status === "completed";
-        case "all":
+        case 'upcoming':
+          return b.status === 'confirmed' && bookingDate >= now;
+        case 'payment_pending':
+          return b.paymentStatus === 'unpaid';
+        case 'completed':
+          return b.status === 'completed';
+        case 'all':
         default:
           return true;
       }
@@ -178,27 +182,41 @@ const BookingsPage = () => {
 
   const handleChat = (bookingId, slot) => {
     if (!isChatActive(slot)) {
-      toast.error("Chat will open only during your scheduled slot time.");
+      toast.error('Chat will open only during your scheduled slot time.');
       return;
     }
     window.location.href = `/chat/${bookingId}`;
   };
 
-  const handlePay = (bookingId) => {
-    toast.success(`Redirecting to payment for Booking ID: ${bookingId}`);
+  const handlePay = async (bookingId) => {
+    try {
+      const response = await fetch('/api/payment/create-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ bookingId }),
+      });
+
+      const { url } = await response.json();
+      window.location.href = url;
+    } catch (error) {
+      console.error('Error creating payment session:', error);
+      toast.error('Failed to initiate payment.');
+    }
   };
 
   const handleReview = (bookingId) => {
-    toast.success(`Opening review form for Booking ID: ${bookingId}`);
+    window.location.href = `/review/${bookingId}`;
   };
 
   const handleSummarizeChat = async (bookingId) => {
     setSummarizing(bookingId);
     try {
-      const response = await fetch("/api/summarize-chat", {
-        method: "POST",
+      const response = await fetch('/api/summarize-chat', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ bookingId }),
       });
@@ -207,16 +225,21 @@ const BookingsPage = () => {
 
       if (response.ok) {
         setChatSummaries((prev) => ({ ...prev, [bookingId]: data.summary }));
-        toast.success("Chat summary generated!");
+        toast.success('Chat summary generated!');
       } else {
-        toast.error(data.error || "Failed to summarize chat.");
+        toast.error(data.error || 'Failed to summarize chat.');
       }
     } catch (error) {
-      console.error("Error summarizing chat:", error);
-      toast.error("An error occurred while summarizing the chat.");
+      console.error('Error summarizing chat:', error);
+      toast.error('An error occurred while summarizing the chat.');
     } finally {
       setSummarizing(null);
     }
+  };
+
+  const handleViewSummary = (bookingId) => {
+    setSelectedSummary(chatSummaries[bookingId]);
+    setIsModalOpen(true);
   };
 
   if (loading) {
@@ -236,20 +259,20 @@ const BookingsPage = () => {
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-8 text-white text-center sm:text-left">🗓️ My Consultation History</h2>
 
         <div className="flex md:flex-wrap space-x-0 sm:space-x-4 mb-6 sm:mb-8 border-b border-gray-700 overflow-x-auto">
-          {["all", "upcoming", "payment_pending", "completed"].map((tab) => (
+          {['all', 'upcoming', 'payment_pending', 'completed'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`cursor-pointer py-2 sm:py-3 px-3 sm:px-6 text-xs sm:text-base font-semibold transition-colors duration-200 whitespace-nowrap ${
                 activeTab === tab
-                  ? "border-b-4 border-blue-500 text-blue-400"
-                  : "text-gray-400 hover:text-white"
+                  ? 'border-b-4 border-blue-500 text-blue-400'
+                  : 'text-gray-400 hover:text-white'
               }`}
             >
-              {tab === "all" && <><FontAwesomeIcon icon={faCalendarAlt} className="mr-2" /> All Bookings</>}
-              {tab === "upcoming" && <><FontAwesomeIcon icon={faClock} className="mr-2" /> Upcoming</>}
-              {tab === "payment_pending" && <><FontAwesomeIcon icon={faMoneyCheckAlt} className="mr-2" /> Payment Pending</>}
-              {tab === "completed" && <><FontAwesomeIcon icon={faCheckCircle} className="mr-2" /> Completed</>}
+              {tab === 'all' && <><FontAwesomeIcon icon={faCalendarAlt} className="mr-2" /> All Bookings</>}
+              {tab === 'upcoming' && <><FontAwesomeIcon icon={faClock} className="mr-2" /> Upcoming</>}
+              {tab === 'payment_pending' && <><FontAwesomeIcon icon={faMoneyCheckAlt} className="mr-2" /> Payment Pending</>}
+              {tab === 'completed' && <><FontAwesomeIcon icon={faCheckCircle} className="mr-2" /> Completed</>}
             </button>
           ))}
         </div>
@@ -257,10 +280,10 @@ const BookingsPage = () => {
         {filteredBookings.length === 0 ? (
           <div className="p-6 sm:p-10 bg-gray-800 rounded-lg text-center border-2 border-dashed border-gray-700">
             <p className="text-base sm:text-xl text-gray-400">
-              {activeTab === "all" && "You haven't made any bookings yet."}
-              {activeTab === "upcoming" && "No upcoming consultations found."}
-              {activeTab === "payment_pending" && "No pending payments."}
-              {activeTab === "completed" && "No completed consultations yet."}
+              {activeTab === 'all' && 'You haven\'t made any bookings yet.'}
+              {activeTab === 'upcoming' && 'No upcoming consultations found.'}
+              {activeTab === 'payment_pending' && 'No pending payments.'}
+              {activeTab === 'completed' && 'No completed consultations yet.'}
             </p>
           </div>
         ) : (
@@ -323,25 +346,31 @@ const BookingsPage = () => {
                       <FontAwesomeIcon icon={faMagic} className="mr-2" />
                       AI Chat Summary
                     </h4>
-                    <p className="text-xs text-gray-300 italic">{chatSummaries[booking._id]}</p>
+                    <p className="text-xs text-gray-300 italic truncate">{chatSummaries[booking._id]}</p>
+                    <button
+                      onClick={() => handleViewSummary(booking._id)}
+                      className="text-xs text-blue-400 hover:underline mt-2"
+                    >
+                      View Full Summary
+                    </button>
                   </div>
                 )}
 
                 <div className="mt-auto space-y-2">
-                  {booking.status === "confirmed" ? (
+                  {booking.status === 'confirmed' ? (
                     <button
                       disabled={!isChatActive(booking.slot)}
                       onClick={() => handleChat(booking._id, booking.slot)}
                       className={`text-center font-semibold rounded-xl py-2 backdrop-blur-md border shadow-md transition-all duration-300 w-full cursor-pointer ${
                         !isChatActive(booking.slot)
-                          ? "bg-gray-600/10 cursor-not-allowed border-gray-500/20 shadow-gray-500/20 text-gray-300 hover:bg-gray-500/20 hover:shadow-gray-500/30"
-                          : "bg-green-600/10 border-green-500/20 shadow-green-500/20 hover:bg-green-700/20 text-green-500 hover:shadow-green-500/30"
+                          ? 'bg-gray-600/10 cursor-not-allowed border-gray-500/20 shadow-gray-500/20 text-gray-300 hover:bg-gray-500/20 hover:shadow-gray-500/30'
+                          : 'bg-green-600/10 border-green-500/20 shadow-green-500/20 hover:bg-green-700/20 text-green-500 hover:shadow-green-500/30'
                       }`}
                     >
                       <FontAwesomeIcon icon={faComments} className="mr-2" />
-                      {!isChatActive(booking.slot) ? "Chat (Locked)" : "Join Chat"}
+                      {!isChatActive(booking.slot) ? 'Chat (Locked)' : 'Join Chat'}
                     </button>
-                  ) : booking.status === "completed" ? (
+                  ) : booking.status === 'completed' ? (
                     <p className="text-center text-green-500 font-semibold rounded-xl py-2 backdrop-blur-md bg-green-500/10 border border-green-400/40 shadow-md shadow-green-400/20 transition-all duration-300 hover:shadow-green-500/30 hover:bg-green-500/20">
                       <FontAwesomeIcon icon={faCheckCircle} className="mr-2"/>
                       Completed
@@ -353,21 +382,21 @@ const BookingsPage = () => {
                     </p>
                   )}
 
-                  {(booking.paymentStatus === "unpaid" && booking.status === "completed") && (
+                  {(userRole === 'Client' && booking.paymentStatus === 'unpaid' && booking.status === 'completed') && (
                     <button
                       onClick={() => handlePay(booking._id)}
-                      className="w-full rounded-lg text-center text-blue-50 font-semibold py-2 backdrop-blur-md bg-blue-300/40 border border-blue-200/40 shadow-md shadow-blue-500/50 transition-all duration-300 hover:shadow-blue-400/60 hover:bg-blue-500/50"
+                      className="w-full rounded-lg cursor-pointer text-center text-blue-50 font-semibold py-2 backdrop-blur-md bg-blue-300/40 border border-blue-200/40 shadow-md shadow-blue-500/50 transition-all duration-300 hover:shadow-blue-400/60 hover:bg-blue-500/50"
                     >
                       <FontAwesomeIcon icon={faIndianRupeeSign} className="mr-2" /> Pay Now
                     </button>
                   )}
                   
                   {/* Summarize Chat Button */}
-                  {booking.status === "completed" && (
+                  {booking.status === 'completed' && (
                     <button
                       onClick={() => handleSummarizeChat(booking._id)}
                       disabled={summarizing === booking._id || chatSummaries[booking._id]}
-                      className="w-full rounded-lg text-center font-semibold py-2 backdrop-blur-md bg-purple-400/40 border border-purple-200/40 shadow-md shadow-purple-500/20 transition-all duration-300 hover:shadow-purple-600/30 hover:bg-purple-500/50 disabled:bg-gray-600/10 disabled:cursor-not-allowed disabled:border-gray-500/20 disabled:shadow-none disabled:text-gray-400"
+                      className="w-full cursor-pointer rounded-lg text-center font-semibold py-2 backdrop-blur-md bg-purple-400/40 border border-purple-200/40 shadow-md shadow-purple-500/20 transition-all duration-300 hover:shadow-purple-600/30 hover:bg-purple-500/50 disabled:bg-gray-600/10 disabled:cursor-not-allowed disabled:border-gray-500/20 disabled:shadow-none disabled:text-gray-400"
                     >
                       {summarizing === booking._id ? (
                         <><FontAwesomeIcon icon={faSpinner} spin className="mr-2" />Summarizing...</>
@@ -379,10 +408,10 @@ const BookingsPage = () => {
                     </button>
                   )}
 
-                  {booking.status === "completed" && !booking.reviewStatus && (
+                  {(userRole === 'Client' && booking.status === 'completed' && !booking.reviewStatus) && (
                     <button
                       onClick={() => handleReview(booking._id)}
-                      className="w-full rounded-lg text-center text-yellow-100 font-semibold py-2 backdrop-blur-md bg-yellow-400/40 border border-yellow-200/40 shadow-md shadow-yellow-500/20 transition-all duration-300 hover:shadow-yellow-600/30 hover:bg-yellow-500/50"
+                      className="w-full rounded-lg cursor-pointer text-center text-yellow-100 font-semibold py-2 backdrop-blur-md bg-yellow-400/40 border border-yellow-200/40 shadow-md shadow-yellow-500/20 transition-all duration-300 hover:shadow-yellow-600/30 hover:bg-yellow-500/50"
                     >
                       <FontAwesomeIcon icon={faStar} className="mr-2" /> Leave a Review
                     </button>
@@ -393,6 +422,21 @@ const BookingsPage = () => {
           </div>
         )}
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
+          <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full">
+            <h3 className="text-xl font-bold mb-4">Chat Summary</h3>
+            <p className="text-gray-300 whitespace-pre-wrap">{selectedSummary}</p>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

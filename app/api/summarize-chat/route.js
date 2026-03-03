@@ -1,48 +1,49 @@
 import { NextResponse } from "next/server";
-import Message from "@/models/messageModel";
-import databaseConnection from "@/lib/dbConfig";
+import { db } from "@/lib/firebaseConfig"; // Using the initialized client-side config
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-
-
-
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
 
 export async function POST(request) {
   try {
-    await databaseConnection();
     const { bookingId } = await request.json();
 
     if (!bookingId) {
       return NextResponse.json({ error: "Booking ID is required" }, { status: 400 });
     }
 
-    // In this project, the booking ID is used as the chat room ID.
-    const messages = await Message.find({ roomId: bookingId }).sort({ timestamp: "asc" });
+    // Path to the messages subcollection in Firestore
+    const messagesRef = collection(db, `chats/${bookingId}/messages`);
+    const q = query(messagesRef, orderBy("createdAt", "asc"));
 
-    if (messages.length === 0) {
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
       return NextResponse.json({ summary: "No chat messages were found for this booking." });
     }
 
-    // Combine messages into a single string for the AI to process.
+    const messages = [];
+    querySnapshot.forEach((doc) => {
+      messages.push(doc.data());
+    });
+
     const chatHistory = messages
-      .map((msg) => `${msg.senderId === bookingId.consultantId ? "Consultant" : "Client"}: ${msg.text}`)
+      .map((msg) => `**${msg.senderName || 'User'}**: ${msg.text}`)
       .join("\n");
 
-    // --- AI Summarization Placeholder ---
-    // The following section is where you would integrate a real AI model
-    // to generate a summary of the chat history.
-    /*
-    const summary = await ai.summarize(chatHistory, {
-      prompt: "Summarize the key points and outcomes of this client-consultant conversation."
-    });
-    */
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const prompt = `Summarize the following conversation between a client and a consultant. Identify the key questions, advice given, and any agreed-upon next steps. The summary should be concise and easy to read.\n\n**Conversation:**\n${chatHistory}`;
     
-    // As a placeholder, we'll return a snippet of the chat.
-    const placeholderSummary = `This is a placeholder summary. To enable AI summarization, integrate an AI service in app/api/summarize-chat/route.js. The chat has ${messages.length} messages. Here's a snippet: "${messages[0].text}"`;
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const summary = response.text();
 
-    return NextResponse.json({ summary: placeholderSummary });
+    return NextResponse.json({ summary });
 
   } catch (error) {
     console.error("Error during chat summarization:", error);
-    return NextResponse.json({ error: "An unexpected error occurred while summarizing the chat." }, { status: 500 });
+    const errorMessage = error.message || "An unexpected error occurred while summarizing the chat.";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

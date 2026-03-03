@@ -187,46 +187,6 @@ const page = () => {
           ))}
         </div>
       </div>
-      
-      {/* Team Section */}
-      <div className="max-w-6xl w-full">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-500">
-          Meet Our Team
-        </h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {[
-            { name: "Jane Doe", title: "CEO" },
-            { name: "John Smith", title: "CTO" },
-            { name: "Emily White", title: "Lead Designer" },
-            { name: "Michael Brown", title: "Head of Operations" },
-          ].map((member, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
-              className="bg-gray-800 p-6 rounded-xl border border-gray-850 hover:scale-95 transition-all duration-700 shadow-lg text-center flex flex-col items-center"
-            >
-              {/* <img
-                src={`https://placehold.co/100x100/374151/9CA3AF?text=${member.name.split(' ').map(n => n[0]).join('')}`}
-                alt={member.name}   
-                className="w-24 h-24 rounded-full mb-4 object-cover border-4 border-gray-800 hover:border-purple-400 transition"
-              /> */}
-              <Image
-              priority
-                src={`https://placehold.co/100x100/374151/9CA3AF?text=${member.name.split(' ').map(n => n[0]).join('')}`}
-                width={100}
-                height={100}
-                alt={member.name}
-                className="w-24 h-24 rounded-full mb-4 object-cover border-4 border-gray-800 hover:border-purple-400 transition"
-              />
-
-              <h3 className="text-xl font-semibold text-white">{member.name}</h3>
-              <p className="text-sm text-purple-400 mt-1">{member.title}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
 
     </div>
     <Footer/>

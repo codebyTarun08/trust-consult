@@ -27,4 +27,10 @@ export const SidebarLinks = [
         icon: 'VscAccount',
         role: 'Admin'
     },
+    {
+        href: '/dashboard/earnings',
+        label: 'Earnings',
+        icon: 'VscCreditCard',
+        role: 'Consultant'
+    },
 ]

@@ -54,6 +54,7 @@ export default function ChatPage() {
   const [paymentModal, setPaymentModal] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
   const [videoFocus, setVideoFocus] = useState("remote"); // remote, local
+  const [imageInView, setImageInView] = useState(null); // State for full-screen image view
 
   // WebRTC refs
   const localVideoRef = useRef();
@@ -116,7 +117,7 @@ export default function ChatPage() {
           if (other?._id) {
             const unsubPresence = listenToPresence(other._id, (isOnline) => setReceiverOnlineState(isOnline));
             // store unsub for cleanup
-            // we won't store unsub globally here, it's fine because effect will cleanup when booking changes
+            // we won\'t store unsub globally here, it\'s fine because effect will cleanup when booking changes
             // but keep a ref if needed
           }
 
@@ -448,7 +449,7 @@ export default function ChatPage() {
     setVideoCallActive(false);
     setEndCallModal(true);
     cleanupPeer();
-
+    
     // Booking complete => payment flow
     if (booking?._id) {
       fetch("/api/booking/complete", {
@@ -560,29 +561,30 @@ export default function ChatPage() {
 
   // UI rendering (kept similar to your original)
   return (
-    <div className="flex flex-col h-screen bg-richblack-900 text-white">
-      <div className="flex items-center justify-between px-6 py-3 bg-richblack-800 shadow-lg sticky top-0 z-10">
+    <div className="flex flex-col h-screen bg-gray-900 text-white bg-contain" style={{ backgroundImage: "url(/chat-bg.png)" }}>
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 bg-richblack-800 shadow-lg sticky top-0 z-10">
         <div className="flex items-center gap-4">
-          <Image width={100} height={100} src={receiverAvatar} alt="avatar" className={`rounded-full object-cover border w-12 h-12 shadow-sm`} />
+          <Image width={100} height={100} src={receiverAvatar} alt="avatar" className={`rounded-full object-cover border-2 border-richblack-600 w-11 h-11 shadow-sm`} />
           <div>
             <div className="font-bold text-lg">{receiverName}</div>
-            <span className={`text-xs ${receiverOnline ? "text-green-400" : "text-gray-200"}`}>
+            <span className={`text-xs ${receiverOnline ? "text-green-400" : "text-gray-400"}`}>
               {receiverOnline ? "Online" : "Offline"}
             </span>
           </div>
         </div>
         <div className="flex gap-3">
-          <button onClick={handleStartCall} className="bg-green-600/20 hover:bg-green-700/30 p-2 rounded-full cursor-pointer"><FaVideo size={20} /></button>
-          <button onClick={handleEndCall} className="bg-red-600 hover:bg-red-700 p-2 rounded-full cursor-pointer"><FaPhoneSlash size={20} /></button>
+          <button onClick={handleStartCall} className="bg-green-600/20 hover:bg-green-700/30 p-2.5 rounded-full cursor-pointer"><FaVideo size={18} /></button>
+          <button onClick={handleEndCall} className="bg-red-500 hover:bg-red-600 p-2.5 rounded-full cursor-pointer"><FaPhoneSlash size={18} /></button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-2 bg-richblack-900">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-3">
         {messages.map((msg, i) => (
-          <div key={i} className={`flex flex-col max-w-xs rounded-xl p-2 ${String(msg.senderId) === String(localUser.id) ? "self-end bg-blue-600" : "self-start bg-richblack-700"}`}>
-            {msg.imageUrl && <Image width={300} height={100} src={msg.imageUrl} alt="sent" className="rounded mb-2 max-h-40 object-contain" />}
-            <span>{msg.text}</span>
-            <span className="text-[10px] text-gray-300 text-right">{msg?.sender}</span>
+          <div key={i} className={`flex flex-col max-w-[75%] sm:max-w-[60%] rounded-xl p-2.5 shadow-md ${String(msg.senderId) === String(localUser.id) ? "self-end bg-blue-600 text-white" : "self-start bg-richblack-700 text-white"}`}>
+            <span className="text-[11px] font-bold text-cyan-300 mb-1">{msg.sender}</span>
+            {msg.imageUrl && <Image width={300} height={100} src={msg.imageUrl} alt="sent" className="rounded mb-2 max-h-40 object-contain cursor-pointer" onClick={() => setImageInView(msg.imageUrl)} />}
+            <span className="whitespace-pre-wrap">{msg.text}</span>
+            <span className="text-[11px] text-gray-400 text-right mt-1 self-end">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
           </div>
         ))}
       </div>
@@ -602,7 +604,7 @@ export default function ChatPage() {
 
             {/* Picture-in-Picture Overlay */}
             <div 
-              className="absolute top-15 right-4 w-1/4 max-w-[250px] aspect-video rounded-lg overflow-hidden shadow-2xl border-2 border-richblack-700 cursor-pointer hover:border-yellow-400 transition-all"
+              className="absolute top-22 right-4 w-1/4 max-w-[250px] aspect-video rounded-lg overflow-hidden shadow-2xl border-2 border-richblack-700 cursor-pointer hover:border-yellow-400 transition-all"
               onClick={() => setVideoFocus(prev => prev === 'local' ? 'remote' : 'local')}
             >
               {videoFocus === 'local' ? (
@@ -649,17 +651,19 @@ export default function ChatPage() {
         </div>
       )}
 
-      <div className="p-4 flex items-center gap-2 bg-richblack-800 border-t border-richblack-700">
-        <button onClick={() => document.getElementById("img-upload").click()}><FaImage size={22} /></button>
+      <div className="px-4 py-2 bg-richblack-800 flex items-center gap-3 border-t border-richblack-700">
+        <button onClick={() => document.getElementById("img-upload").click()} className="text-gray-400 hover:text-cyan-400 p-2 rounded-full"><FaImage size={24} /></button>
         <input id="img-upload" type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
         {uploadImage?.preview && (
           <div className="relative inline-block">
-            <Image unoptimized width={100} height={100} src={uploadImage.preview} alt="preview" className="w-10 h-10 rounded object-cover border mx-2" />
+            <Image unoptimized width={100} height={100} src={uploadImage.preview} alt="preview" className="w-12 h-12 rounded-lg object-cover border-2 border-gray-300" />
             <button onClick={() => setUploadImage(null)} className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-700" title="Remove image">×</button>
           </div>
         )}
-        <input type="text" className="grow bg-richblack-700 rounded-lg px-3 py-2 focus:outline-none" placeholder="Type a message..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} />
-        <button onClick={handleSendMessage} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white font-semibold cursor-pointer disabled:opacity-50" disabled={sending}>{sending ? "Sending..." : "Send"}</button>
+        <input type="text" className="grow bg-richblack-700 rounded-full px-4 py-2.5 focus:outline-none text-white text-base" placeholder="Type a message..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} />
+        <button onClick={handleSendMessage} className="bg-blue-600 hover:bg-blue-700 w-12 h-12 rounded-full text-white font-semibold cursor-pointer disabled:opacity-50 flex items-center justify-center" disabled={sending}>
+          {sending ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"></path></svg>}
+        </button>
       </div>
 
       {paymentModal && (
@@ -676,6 +680,8 @@ export default function ChatPage() {
       )}
 
       {reviewModal && <ReviewModal bookingId={booking?._id} onClose={() => setReviewModal(false)} />}
+      
+      <ImageModal imageUrl={imageInView} onClose={() => setImageInView(null)} />
     </div>
   );
 }
@@ -719,6 +725,34 @@ function ReviewModal({ bookingId, onClose }) {
           <button className="cursor-pointer px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-700 disabled:opacity-50 transition-colors" onClick={onClose} disabled={saving}>Cancel</button>
           <button className="cursor-pointer px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-colors" disabled={saving || rating === 0} onClick={handleSubmitReview}>{saving ? 'Saving...' : 'Submit'}</button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ImageModal({ imageUrl, onClose }) {
+  if (!imageUrl) return null;
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+      onClick={onClose} // Close on overlay click
+    >
+      <div className="relative p-4">
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 bg-white text-black rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold hover:bg-gray-200"
+        >
+          &times;
+        </button>
+        <Image
+          width={800} 
+          height={600}
+          src={imageUrl}
+          alt="Full view"
+          className="max-w-[90vw] max-h-[90vh] object-contain"
+          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the image itself
+        />
       </div>
     </div>
   );
