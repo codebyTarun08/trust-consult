@@ -2,7 +2,7 @@
 <div align="center">
   <h1>TrustConsult</h1>
   <h2> A Full Stack Online Consulting Platform </h2>
-  <h3> Check out at https://trust-consult.vercel.app</h3>
+  <h3> Check out at https://trustconsult.vercel.app</h3>
   <p>A full-stack consultancy platform enabling clients to connect with trusted experts via real-time chat, video calling, and secure online payments.</p>
 </div>
 
